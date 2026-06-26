@@ -1,0 +1,126 @@
+# PROMPTS.md
+
+# 1. Architecture Prompt
+
+**Date:** 2026-06-26
+
+## Prompt
+
+You are a senior AI engineer.
+
+I am building an Agentic RAG pipeline for a legal contract extraction challenge.
+
+Requirements:
+
+- Python 3.12
+- FastAPI
+- LangChain
+- LangGraph (if useful)
+- FAISS
+- Sentence Transformers
+- Pydantic
+- pdfplumber or Unstructured
+- Strict JSON schema extraction
+- Validation agent that detects contradictions and populates validation_notes
+
+Important constraints:
+
+- The application must also include a CLI in addition to the FastAPI API.
+- The code should be modular, production-quality, and easy to explain in an interview.
+- Do not generate any code yet.
+
+Instead provide:
+
+1. Overall architecture
+2. Folder structure
+3. Responsibilities of every module
+4. End-to-end data flow
+5. CLI design
+6. FastAPI endpoints
+7. Validation strategy
+8. Error handling strategy
+9. Logging strategy
+10. Development roadmap in implementation order
+
+Do not write any implementation code.
+
+---
+
+## AI Response Summary
+
+- Proposed a modular Agentic RAG architecture.
+- Suggested LangGraph orchestration.
+- Introduced FastAPI + CLI.
+- Added FAISS, validation agent, and service layer.
+
+---
+
+# 2. Refinement Loop
+
+## Refinement 1
+
+### Prompt
+
+Review the proposed architecture as if you are an Staff AI Engineer conducting a production design review.
+
+Do not rewrite everything.
+
+Instead identify:
+
+1. Unnecessary complexity for a 24-hour internship assignment.
+2. Places where the architecture is overengineered.
+3. Missing design decisions.
+4. Risks in the chunking strategy.
+5. Risks in retrieval.
+6. Risks in validation.
+7. Improvements specifically for legal contracts with tables, cross references and schedule overrides.
+8. Explain how the validator should detect contradictory values like:
+   - different signatory titles
+   - overridden clauses
+   - headline fee vs effective fee
+   - conflicting notice periods
+
+Finally provide a revised architecture that is simpler, interview-friendly, and more robust.
+
+### AI Response Summary
+
+The AI reviewed its own architecture and identified:
+
+- LangGraph was unnecessary for a linear pipeline.
+- Background jobs and batch APIs added unnecessary complexity.
+- Retrieval needed better coverage for contradiction detection.
+- Validation required deterministic checks before LLM reasoning.
+- Table extraction and cross-reference resolution were missing.
+
+### What Was Wrong
+
+After reviewing the proposed architecture, I identified a few areas that were not well suited for a 24-hour internship challenge:
+
+- The architecture introduced unnecessary complexity by using LangGraph, background jobs, and batch APIs for a simple linear extraction workflow.
+- The retrieval strategy focused on semantic search but did not sufficiently address retrieval recall for contradiction detection.
+- The validation strategy relied heavily on an LLM and lacked deterministic checks for conflicting values.
+- The design did not clearly explain how tables, schedule overrides, and cross-references would be preserved during chunking and retrieval.
+- Some infrastructure components (index registry, persistent indexing, detailed exception hierarchy) increased implementation effort without significantly improving the assignment outcome.
+
+These observations led me to simplify the architecture and focus more on document understanding, retrieval quality, and deterministic validation.
+
+### Final Decision
+
+I simplified the architecture by:
+
+- Removing LangGraph.
+- Removing background jobs and index registry.
+- Using a single pipeline orchestrator.
+- Adding table-aware chunking.
+- Adding deterministic validation before LLM-based contradiction -detection.
+- Adding cross-reference expansion and document-role metadata for legal overrides..
+
+---
+
+## Refinement 2
+
+---
+
+# 3. AI Blindspot
+
+(To be completed after the project is finished.)

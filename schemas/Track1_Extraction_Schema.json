@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ContractExtraction",
+  "description": "Target schema for Track 1 — Agentic AI & Advanced RAG. Your extraction agent should produce a JSON object matching this schema for the provided contract PDF. Where a field cannot be reliably extracted, return null and have your Validator Agent flag it — DO NOT hallucinate plausible values.",
+  "type": "object",
+  "required": [
+    "contract_id",
+    "parties",
+    "effective_date",
+    "term_months",
+    "fees",
+    "milestones",
+    "termination",
+    "validation_notes"
+  ],
+  "properties": {
+    "contract_id": {
+      "type": "string",
+      "description": "Unique contract identifier as shown in the document header."
+    },
+    "parties": {
+      "type": "object",
+      "required": ["provider", "client"],
+      "properties": {
+        "provider": {
+          "type": "object",
+          "required": ["legal_name", "signatory_name", "signatory_title"],
+          "properties": {
+            "legal_name": { "type": "string" },
+            "address": { "type": "string" },
+            "signatory_name": { "type": "string" },
+            "signatory_title": { "type": "string" }
+          }
+        },
+        "client": {
+          "type": "object",
+          "required": ["legal_name", "signatory_name", "signatory_title"],
+          "properties": {
+            "legal_name": { "type": "string" },
+            "address": { "type": "string" },
+            "signatory_name": { "type": "string" },
+            "signatory_title": { "type": "string" }
+          }
+        }
+      }
+    },
+    "effective_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Effective date in ISO 8601 (YYYY-MM-DD). Normalize whatever format you find."
+    },
+    "term_months": {
+      "type": "integer",
+      "description": "Initial term length in months."
+    },
+    "fees": {
+      "type": "object",
+      "required": ["total_payable", "currency"],
+      "properties": {
+        "headline_fee": {
+          "type": "number",
+          "description": "The sticker fee mentioned in the contract."
+        },
+        "total_payable": {
+          "type": "number",
+          "description": "The actual total amount the client will pay during the Initial Term, inclusive of all surcharges and one-time fees but exclusive of taxes."
+        },
+        "currency": {
+          "type": "string",
+          "enum": ["USD", "INR", "EUR", "GBP", "Other"]
+        },
+        "reimbursement_cap": {
+          "type": "object",
+          "properties": {
+            "amount": { "type": "number" },
+            "currency": { "type": "string" },
+            "period": { "type": "string" }
+          }
+        }
+      }
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["milestone_id", "deliverable", "fee_percent_released"],
+        "properties": {
+          "milestone_id": { "type": "string" },
+          "deliverable": { "type": "string" },
+          "target_date": {
+            "type": ["string", "null"],
+            "format": "date",
+            "description": "ISO 8601 if determinable. Null if 'To be determined' or ambiguous."
+          },
+          "fee_percent_released": { "type": "number" }
+        }
+      }
+    },
+    "termination": {
+      "type": "object",
+      "required": ["notice_days_general"],
+      "properties": {
+        "notice_days_general": {
+          "type": "integer",
+          "description": "Notice period in days for general termination of the Agreement."
+        },
+        "notice_days_managed_services": {
+          "type": ["integer", "null"],
+          "description": "Notice period in days specifically for managed services, if it differs from the general notice period."
+        }
+      }
+    },
+    "validation_notes": {
+      "type": "array",
+      "description": "REQUIRED. Your Validator Agent must surface any inconsistencies, conflicts, or ambiguities it detected in the source document. An empty array means you found none — which would itself be a notable finding.",
+      "items": {
+        "type": "object",
+        "required": ["field", "issue", "severity"],
+        "properties": {
+          "field": { "type": "string", "description": "JSON path to the affected field (e.g., 'parties.client.signatory_title')." },
+          "issue": { "type": "string", "description": "A short, factual description of the problem." },
+          "severity": { "type": "string", "enum": ["low", "medium", "high"] }
+        }
+      }
+    }
+  }
+}
