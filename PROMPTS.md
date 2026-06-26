@@ -409,6 +409,48 @@ The AI generated a validation layer using the Pydantic `ContractExtraction` mode
 
 Simplified the validation agent to focus solely on schema validation, produce structured validation notes, and raise `ValidationError` for unrecoverable validation failures. Recovery decisions will be handled by the extraction pipeline instead.
 
+## Refinement 17
+
+### Prompt
+
+Generate `src/services/pipeline_service.py`.
+
+### AI Response Summary
+
+The AI generated an orchestration layer connecting document ingestion, chunking, embeddings, retrieval, and extraction into a single pipeline.
+
+### What Was Wrong
+
+- Several generated method names did not match the existing project implementation.
+- Component imports did not align with the project's folder structure.
+- Embedding generation incorrectly passed chunk dictionaries instead of chunk text.
+- Logging included unnecessary request-specific information.
+
+### Final Decision
+
+Aligned the pipeline with the existing implementation, corrected method names and imports, passed chunk text into the embedding service, and simplified logging while keeping orchestration responsibilities isolated.
+
+## Refinement 18
+
+### Prompt
+
+Generate `src/cli/main.py`.
+
+### AI Response Summary
+
+The AI generated a Typer-based CLI that loads a schema, initializes the extraction pipeline, executes it, and writes the result to disk.
+
+### What Was Wrong
+
+- The prompt builder import did not match the actual project structure.
+- Logging exposed file paths unnecessarily.
+- Exception handling was inconsistent with the rest of the project.
+- JSON output did not explicitly preserve Unicode characters.
+
+### Final Decision
+
+Aligned imports with the project structure, simplified logging, standardized exception handling, and enabled Unicode-safe JSON output.
+
 ---
 
 # 3. AI Blindspot
