@@ -309,57 +309,84 @@ The implementation included a redundant `except RetrievalError` block that could
 
 Removed the unnecessary exception block and kept the remaining implementation unchanged.
 
-"""Retriever module for fetching relevant chunks from the vector store."""
+## Refinement 12
 
-from src.core.logging import logger
-from src.core.exceptions import RetrievalError
-from src.embeddings.embeddings import EmbeddingService
-from src.retrieval.vector_store import VectorStore
+### Prompt
 
-class Retriever:
-"""Retrieves relevant document chunks for a given query using
-an embedding service and a vector store."""
+Generate `src/retrieval/retrieval.py`.
 
-    def __init__(self, embedding_service: EmbeddingService, vector_store: VectorStore) -> None:
-        """Initialize the Retriever.
+### AI Response Summary
 
-        Args:
-            embedding_service: Service used to generate query embeddings.
-            vector_store: Vector store used to perform similarity search.
-        """
-        self.embedding_service = embedding_service
-        self.vector_store = vector_store
+The AI generated a retriever that connects the embedding service with the FAISS vector store.
 
-    def retrieve(self, query: str, k: int = 5) -> list[dict]:
-        """Retrieve the top-k relevant chunk metadata for a query.
+### What Was Wrong
 
-        Args:
-            query: The input query string.
-            k: Number of top results to retrieve.
+- Exception messages duplicated information already preserved through exception chaining.
+- The logger recorded the raw query string, which is unnecessary and could expose user input in logs.
 
-        Returns:
-            A list of dictionaries containing chunk metadata.
+### Final Decision
 
-        Raises:
-            RetrievalError: If embedding generation or search fails.
-        """
-        logger.info("Starting retrieval for query: %r (k=%d)", query, k)
+Simplified exception messages and switched to parameterized logging without recording the raw query text.
 
-        try:
-            query_embedding = self.embedding_service.embed(query)
-        except Exception as exc:
-            logger.error("Failed to generate embedding for query: %r. Error: %s", query, e)
-            raise RetrievalError(f"Embedding generation failed: {e}") from exc
+## Refinement 13
 
-        try:
-            results = self.vector_store.search(query_embedding, k=k)
-        except Exception as exc:
-            logger.error("Failed to search vector store for query: %r. Error: %s", query, e)
-            raise RetrievalError(f"Vector store search failed: {e}") from exc
+### Prompt
 
-        logger.info("Retrieval completed for query: %r. Retrieved %d results.", query, len(results))
+Generate `src/agents/prompt_builder.py`.
 
-        return results
+### AI Response Summary
+
+The AI generated a deterministic prompt builder that structures the extraction prompt into instructions, schema, query, context, and output directives.
+
+### What Was Wrong
+
+- The chunk formatter expected a `page` field instead of the existing `page_number` field produced by the ingestion pipeline.
+- An unused import (`Any`) was included.
+- The JSON schema serialization did not explicitly preserve Unicode characters.
+
+### Final Decision
+
+Aligned the prompt builder with the existing chunk metadata, removed the unused import, and serialized the schema using `ensure_ascii=False` for better robustness.
+
+## Refinement 14
+
+### Prompt
+
+Generate `src/agents/gemini_client.py`.
+
+### AI Response Summary
+
+The AI generated a reusable Gemini client using `ChatGoogleGenerativeAI`, loading the model once and exposing a `generate()` method for deterministic text generation.
+
+### What Was Wrong
+
+- The API key was initially passed as a `SecretStr` instead of extracting its value.
+- Exception handling and logging were made consistent with the rest of the project.
+- The model response was explicitly converted to `str` before returning for safer downstream processing.
+
+### Final Decision
+
+Updated the client to use `settings.google_api_key.get_secret_value()`, standardized exception handling, and returned `str(response.content)` for consistency.
+
+## Refinement 15
+
+### Prompt
+
+Generate `src/agents/extraction_agent.py`.
+
+### AI Response Summary
+
+The AI generated an orchestration layer that coordinates prompt construction, Gemini inference, JSON parsing, and validation.
+
+### What Was Wrong
+
+- The implementation logged the raw user query instead of keeping logs generic.
+- Empty LLM responses were not handled before JSON parsing.
+- Exception handling was aligned with the project's convention by using exception chaining and simplified error messages.
+
+### Final Decision
+
+Updated the extraction agent to use privacy-friendly logging, detect empty model responses before parsing, and standardize exception handling across the project.
 
 ---
 
