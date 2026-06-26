@@ -180,6 +180,24 @@ No major issues were found during review. The generated implementation already m
 
 Accepted the implementation without functional changes because it was simple, reusable, and appropriate for the project.
 
+## Refinement 5
+
+### Prompt
+
+Generate only `src/core/exceptions.py`.
+
+### AI Response Summary
+
+The AI generated a clean exception hierarchy with a shared base exception and dedicated exception types for each pipeline stage.
+
+### What Was Wrong
+
+No significant issues were identified. The implementation was simple, modular, and matched the intended architecture.
+
+### Final Decision
+
+Accepted the implementation without modifications because it clearly separates different failure categories while keeping the code easy to understand and maintain.
+
 ---
 
 # 3. AI Blindspot
