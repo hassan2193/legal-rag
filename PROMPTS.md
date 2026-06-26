@@ -309,6 +309,58 @@ The implementation included a redundant `except RetrievalError` block that could
 
 Removed the unnecessary exception block and kept the remaining implementation unchanged.
 
+"""Retriever module for fetching relevant chunks from the vector store."""
+
+from src.core.logging import logger
+from src.core.exceptions import RetrievalError
+from src.embeddings.embeddings import EmbeddingService
+from src.retrieval.vector_store import VectorStore
+
+class Retriever:
+"""Retrieves relevant document chunks for a given query using
+an embedding service and a vector store."""
+
+    def __init__(self, embedding_service: EmbeddingService, vector_store: VectorStore) -> None:
+        """Initialize the Retriever.
+
+        Args:
+            embedding_service: Service used to generate query embeddings.
+            vector_store: Vector store used to perform similarity search.
+        """
+        self.embedding_service = embedding_service
+        self.vector_store = vector_store
+
+    def retrieve(self, query: str, k: int = 5) -> list[dict]:
+        """Retrieve the top-k relevant chunk metadata for a query.
+
+        Args:
+            query: The input query string.
+            k: Number of top results to retrieve.
+
+        Returns:
+            A list of dictionaries containing chunk metadata.
+
+        Raises:
+            RetrievalError: If embedding generation or search fails.
+        """
+        logger.info("Starting retrieval for query: %r (k=%d)", query, k)
+
+        try:
+            query_embedding = self.embedding_service.embed(query)
+        except Exception as exc:
+            logger.error("Failed to generate embedding for query: %r. Error: %s", query, e)
+            raise RetrievalError(f"Embedding generation failed: {e}") from exc
+
+        try:
+            results = self.vector_store.search(query_embedding, k=k)
+        except Exception as exc:
+            logger.error("Failed to search vector store for query: %r. Error: %s", query, e)
+            raise RetrievalError(f"Vector store search failed: {e}") from exc
+
+        logger.info("Retrieval completed for query: %r. Retrieved %d results.", query, len(results))
+
+        return results
+
 ---
 
 # 3. AI Blindspot
