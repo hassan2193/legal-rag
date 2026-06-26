@@ -388,6 +388,27 @@ The AI generated an orchestration layer that coordinates prompt construction, Ge
 
 Updated the extraction agent to use privacy-friendly logging, detect empty model responses before parsing, and standardize exception handling across the project.
 
+## Refinement 16
+
+### Prompt
+
+Generate `src/agents/validation_agent.py`.
+
+### AI Response Summary
+
+The AI generated a validation layer using the Pydantic `ContractExtraction` model with optional recovery logic.
+
+### What Was Wrong
+
+- Recovery logic was placed inside the validation layer, violating single responsibility.
+- Validation errors were appended as plain strings instead of structured `ValidationNote` objects.
+- Exception handling and error messages were not fully aligned with the rest of the project.
+- The unused `schema` parameter remained in the interface.
+
+### Final Decision
+
+Simplified the validation agent to focus solely on schema validation, produce structured validation notes, and raise `ValidationError` for unrecoverable validation failures. Recovery decisions will be handled by the extraction pipeline instead.
+
 ---
 
 # 3. AI Blindspot
