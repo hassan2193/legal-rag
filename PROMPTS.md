@@ -119,6 +119,29 @@ I simplified the architecture by:
 
 ## Refinement 2
 
+### Prompt
+
+Generate only a production-ready pyproject.toml file for this project.
+
+### AI Response Summary
+
+The AI generated a complete `pyproject.toml` with project metadata, dependencies, build configuration, and development tools.
+
+### What Was Wrong
+
+- The generated build configuration assumed a `legal-rag` package, while the project uses a `src/` layout.
+- Gemini dependencies were missing.
+- The author information was left as a placeholder.
+- The development dependencies did not include Black.
+
+### Final Decision
+
+- Updated the author information.
+- Added Gemini dependencies.
+- Removed the incorrect package configuration.
+- Added Black to the development dependencies.
+- Kept the configuration aligned with the current project structure.
+
 ---
 
 # 3. AI Blindspot
