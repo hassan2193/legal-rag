@@ -474,6 +474,8 @@ Aligned imports with the project structure, standardized exception handling, sim
 
 ---
 
-# 3. AI Blindspot
+## AI Blindspot Note
 
-(To be completed after the project is finished.)
+Throughout the project, the AI was very helpful in generating boilerplate code and suggesting the overall architecture. However, it consistently struggled with subtle integration issues rather than implementation details. The most common problems included incorrect assumptions about project structure, duplicate model definitions after iterative edits, improper handling of optional fields in the Pydantic schema, and JSON parsing failures caused by markdown code fences in LLM responses.
+
+These issues required manual review, debugging, and validation instead of accepting the generated code as-is. I treated the AI as a junior developer whose output needed verification, tested every component individually, inspected logs, and made corrections where necessary. This iterative review process was essential for producing a working end-to-end pipeline.

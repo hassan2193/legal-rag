@@ -45,10 +45,7 @@ class ExtractionAgent:
             len(raw_response),
         )
         
-        print("\n" + "=" * 80)
-        print("RAW GEMINI RESPONSE:")
-        print(raw_response)
-        print("=" * 80 + "\n")
+        
 
         try:
             parsed_result = self._parse_json(raw_response)
