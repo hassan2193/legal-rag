@@ -38,3 +38,5 @@ faiss_index/
 
 # uv
 .python-version
+
+desktop.ini

@@ -170,6 +170,22 @@ http://127.0.0.1:8000/docs
 }
 ```
 
+## Folder Structure
+
+![Folder Structure](screenshots/folder-structure.png)
+
+## Swagger UI
+
+![Swagger](screenshots/swagger.png)
+
+## CLI
+
+![CLI](screenshots/CLI.png)
+
+## Sample Output
+
+![Output](screenshots/Output.png)
+
 ---
 
 ## 🔥 Highlights
