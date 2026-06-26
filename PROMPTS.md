@@ -236,6 +236,43 @@ The AI generated reusable Pydantic models using a bottom-up approach with enums,
 
 Updated the models to distinguish required-nullable fields from optional fields, reused existing enums where appropriate, and aligned field descriptions more closely with the schema.
 
+## Refinement 8
+
+### Prompt
+
+Generate `src/ingestion/loader.py` using pdfplumber.
+
+### AI Response Summary
+
+The AI generated a reusable PDF loader that extracts page-wise text, uses custom exceptions, and integrates project logging.
+
+### What Was Wrong
+
+- The loader did not log when the PDF loading process started.
+- It included an unnecessary `except IngestionError` block that could never be reached.
+
+### Final Decision
+
+Added a log message before opening the PDF and simplified the exception handling by removing redundant code.
+
+## Refinement 9
+
+### Prompt
+
+Generate `src/ingestion/chunker.py` for page-preserving character-based chunking.
+
+### AI Response Summary
+
+The AI generated a deterministic character-based chunker that preserves page boundaries, supports overlap, skips empty pages, and produces metadata for each chunk.
+
+### What Was Wrong
+
+The generated implementation returns `list[dict]`, which is less type-safe than using a dedicated `TypedDict` or Pydantic model. However, introducing additional types would increase complexity without providing significant value for the internship assignment.
+
+### Final Decision
+
+Accepted the implementation as-is to keep the ingestion pipeline simple, readable, and interview-friendly. A stronger typed chunk representation can be added later if needed.
+
 ---
 
 # 3. AI Blindspot
