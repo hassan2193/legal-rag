@@ -451,6 +451,27 @@ The AI generated a Typer-based CLI that loads a schema, initializes the extracti
 
 Aligned imports with the project structure, simplified logging, standardized exception handling, and enabled Unicode-safe JSON output.
 
+## Refinement 19
+
+### Prompt
+
+Generate FastAPI application files (`main.py` and `routes.py`) for the existing Legal RAG project.
+
+### AI Response Summary
+
+The AI generated a FastAPI application with an extraction endpoint and application entry point.
+
+### What Was Wrong
+
+- Imports did not fully match the project structure.
+- Logging exposed request-specific information.
+- Exception handling was inconsistent.
+- Minor cleanup was required for production readiness.
+
+### Final Decision
+
+Aligned imports with the project structure, standardized exception handling, simplified logging, and integrated the pipeline correctly with FastAPI.
+
 ---
 
 # 3. AI Blindspot
