@@ -216,6 +216,26 @@ No major issues were found. However, the analysis highlighted implementation dec
 
 Accepted the analysis and decided to implement the Pydantic models in a bottom-up order before adding any cross-field validation logic.
 
+## Refinement 7
+
+### Prompt
+
+Generate the Pydantic models for the analyzed JSON schema.
+
+### AI Response Summary
+
+The AI generated reusable Pydantic models using a bottom-up approach with enums, nested models, and strict schema enforcement.
+
+### What Was Wrong
+
+- Nullable fields that are required by the JSON schema were incorrectly implemented as optional (`default=None`) instead of required nullable fields.
+- The reimbursement currency was typed as a generic string instead of reusing the existing Currency enum.
+- A field description assumed implementation details that were not guaranteed by the schema.
+
+### Final Decision
+
+Updated the models to distinguish required-nullable fields from optional fields, reused existing enums where appropriate, and aligned field descriptions more closely with the schema.
+
 ---
 
 # 3. AI Blindspot
