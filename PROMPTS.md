@@ -142,6 +142,26 @@ The AI generated a complete `pyproject.toml` with project metadata, dependencies
 - Added Black to the development dependencies.
 - Kept the configuration aligned with the current project structure.
 
+## Refinement 3
+
+### Prompt
+
+Generate only `src/core/config.py`.
+
+### AI Response Summary
+
+The AI generated a strongly typed configuration module using `pydantic-settings`, including environment variable loading, validation, and a singleton `Settings` instance.
+
+### What Was Wrong
+
+- The default embedding model was heavier than required for this assignment.
+- I preferred using a lightweight embedding model that is commonly used for RAG pipelines and faster to run locally.
+
+### Final Decision
+
+- Replaced the default embedding model with `BAAI/bge-small-en-v1.5`.
+- Kept the remaining implementation unchanged because it already followed good engineering practices.
+
 ---
 
 # 3. AI Blindspot
