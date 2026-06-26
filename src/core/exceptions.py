@@ -28,3 +28,6 @@ class ExtractionError(LegalRAGError):
 
 class ValidationError(LegalRAGError):
     """Raised when the validation agent fails to complete its consistency checks."""
+
+class PipelineError(LegalRAGError):
+    """Raised when the end-to-end pipeline fails."""
