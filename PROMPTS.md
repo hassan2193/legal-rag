@@ -273,6 +273,42 @@ The generated implementation returns `list[dict]`, which is less type-safe than 
 
 Accepted the implementation as-is to keep the ingestion pipeline simple, readable, and interview-friendly. A stronger typed chunk representation can be added later if needed.
 
+## Refinement 10
+
+### Prompt
+
+Generate `src/retrieval/embeddings.py` using Sentence-Transformers.
+
+### AI Response Summary
+
+The AI generated an embedding service that loads a Sentence-Transformers model once, supports single and batch embeddings, integrates logging, and raises custom retrieval exceptions.
+
+### What Was Wrong
+
+The generated implementation did not normalize embeddings before returning them. Normalized vectors are more appropriate for cosine similarity search with FAISS.
+
+### Final Decision
+
+Enabled embedding normalization while keeping the remaining implementation unchanged.
+
+## Refinement 11
+
+### Prompt
+
+Generate `src/retrieval/vector_store.py` using FAISS.
+
+### AI Response Summary
+
+The AI generated a reusable FAISS-backed vector store with lazy initialization, metadata mapping, similarity search, and custom error handling.
+
+### What Was Wrong
+
+The implementation included a redundant `except RetrievalError` block that could never be reached because no code inside the `try` block explicitly raises that exception.
+
+### Final Decision
+
+Removed the unnecessary exception block and kept the remaining implementation unchanged.
+
 ---
 
 # 3. AI Blindspot
